@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Smart Shop | Radha Sharma</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+
+</head>
+
+
+<body>
+
+
+    <!-- HEADER -->
+
+    <header>
+
+        <h1>🛍️ Smart Shop</h1>
+
+        <p>Your Smart Online Shopping Website</p>
+
+    </header>
+
+
+
+    <!-- NAVIGATION -->
+
+    <nav>
+
+        <a href="/">Home</a>
+
+        <a href="#">Products</a>
+
+        <a href="#">Offers</a>
+
+        <a href="#">Contact</a>
+
+        <input
+            type="text"
+            class="search-box"
+            placeholder="🔎 Search products..."
+        >
+
+        <button id="cartButton">
+            🛒 Cart (<span id="cartCount">0</span>)
+        </button>
+
+    </nav>
+
+
+
+    <!-- MAIN -->
+
+    <main>
+
+
+        <!-- HERO -->
+
+        <section class="hero">
+
+            <h2>Shop Smart. Shop Easy.</h2>
+
+            <p>
+                Discover amazing products at great prices.
+            </p>
+
+            <button class="shop-btn">
+                Shop Now
+            </button>
+
+        </section>
+
+
+
+        <!-- PRODUCTS -->
+
+        <h2 class="section-title">
+            Featured Products
+        </h2>
+
+
+        <section class="products">
+
+
+            <!-- HEADPHONES -->
+
+            <div class="product-card">
+
+                <img
+                    src="{{ url_for('static', filename='images/headphones.jpg') }}"
+                    alt="Wireless Headphones"
+                    class="product-image"
+                >
+
+                <h3>🎧 Wireless Headphones</h3>
+
+                <p>Premium sound experience</p>
+
+                <h4>₹1,499</h4>
+
+                <button
+                    class="add-cart"
+                    data-name="Wireless Headphones"
+                    data-price="1499">
+
+                    Add to Cart
+
+                </button>
+
+            </div>
+
+
+
+            <!-- SMART WATCH -->
+
+            <div class="product-card">
+
+                <img
+                    src="{{ url_for('static', filename='images/watch.jpg') }}"
+                    alt=" Watch"
+                    class="product-image"
+                >
+
+                <h3>⌚ Watch</h3>
+
+                <p>Track your day smarter</p>
+
+                <h4>₹2,499</h4>
+
+                <button
+                    class="add-cart"
+                    data-name="Smart Watch"
+                    data-price="2499">
+
+                    Add to Cart
+
+                </button>
+
+            </div>
+
+
+
+            <!-- SMART PHONE -->
+
+            <div class="product-card">
+
+                <img
+                    src="{{ url_for('static', filename='images/phone.jpg') }}"
+                    alt="Smart Phone"
+                    class="product-image"
+                >
+
+                <h3>📱 Smart Phone</h3>
+
+                <p>Powerful and stylish</p>
+
+                <h4>₹14,999</h4>
+
+                <button
+                    class="add-cart"
+                    data-name="Smart Phone"
+                    data-price="14999">
+
+                    Add to Cart
+
+                </button>
+
+            </div>
+
+
+        </section>
+
+
+
+        <!-- CART -->
+
+        <section id="cartSection"
+                 style="display: none;">
+
+            <h2>🛒 Your Cart</h2>
+
+            <div id="cartItems"></div>
+
+            <h3>
+                Total:
+                ₹<span id="cartTotal">0</span>
+            </h3>
+
+            <button id="closeCart">
+                Continue Shopping
+            </button>
+
+        </section>
+
+
+    </main>
+
+
+
+    <!-- FOOTER -->
+
+    <footer>
+
+        <p>© 2026 Smart Shop</p>
+
+        <p>
+            Designed & Developed by
+            <strong>Radha Sharma</strong>
+        </p>
+
+    </footer>
+
+
+
+    <!-- JAVASCRIPT -->
+
+    <script>
+
+        let cart = [];
+
+
+        const cartCount =
+            document.getElementById("cartCount");
+
+        const cartButton =
+            document.getElementById("cartButton");
+
+        const cartSection =
+            document.getElementById("cartSection");
+
+        const cartItems =
+            document.getElementById("cartItems");
+
+        const cartTotal =
+            document.getElementById("cartTotal");
+
+        const closeCart =
+            document.getElementById("closeCart");
+
+
+
+        // ADD TO CART
+
+        const addButtons =
+            document.querySelectorAll(".add-cart");
+
+
+        addButtons.forEach(function(button) {
+
+            button.addEventListener("click", function() {
+
+                const name =
+                    button.getAttribute("data-name");
+
+                const price =
+                    Number(
+                        button.getAttribute("data-price")
+                    );
+
+
+                const existingProduct =
+                    cart.find(function(item) {
+
+                        return item.name === name;
+
+                    });
+
+
+                if (existingProduct) {
+
+                    existingProduct.quantity++;
+
+                } else {
+
+                    cart.push({
+                        name: name,
+                        price: price,
+                        quantity: 1
+                    });
+
+                }
+
+
+                updateCart();
+
+                button.innerText = "✓ Added";
+
+
+                setTimeout(function() {
+
+                    button.innerText =
+                        "Add to Cart";
+
+                }, 1000);
+
+            });
+
+        });
+
+
+
+        // UPDATE CART
+
+        function updateCart() {
+
+            cartItems.innerHTML = "";
+
+            let total = 0;
+
+            let itemCount = 0;
+
+
+            cart.forEach(function(item, index) {
+
+                total +=
+                    item.price * item.quantity;
+
+                itemCount +=
+                    item.quantity;
+
+
+                const cartItem =
+                    document.createElement("div");
+
+
+                cartItem.innerHTML = `
+
+                    <p>
+
+                        <strong>
+                            ${item.name}
+                        </strong>
+
+                        <br>
+
+                        Price: ₹${item.price}
+
+                        <br>
+
+                        Quantity: ${item.quantity}
+
+                        <br>
+
+                        <button
+                            onclick="removeItem(${index})">
+
+                            Remove
+
+                        </button>
+
+                    </p>
+
+                    <hr>
+
+                `;
+
+
+                cartItems.appendChild(cartItem);
+
+            });
+
+
+            cartCount.innerText =
+                itemCount;
+
+            cartTotal.innerText =
+                total;
+
+        }
+
+
+
+        // REMOVE ITEM
+
+        function removeItem(index) {
+
+            cart.splice(index, 1);
+
+            updateCart();
+
+        }
+
+
+
+        // OPEN CART
+
+        cartButton.addEventListener(
+            "click",
+            function() {
+
+                cartSection.style.display =
+                    "block";
+
+                cartSection.scrollIntoView({
+                    behavior: "smooth"
+                });
+
+            }
+        );
+
+
+
+        // CLOSE CART
+
+        closeCart.addEventListener(
+            "click",
+            function() {
+
+                cartSection.style.display =
+                    "none";
+
+            }
+        );
+
+
+
+        // SEARCH
+
+        const searchBox =
+            document.querySelector(".search-box");
+
+        const products =
+            document.querySelectorAll(".product-card");
+
+
+        searchBox.addEventListener(
+            "input",
+            function() {
+
+                const searchText =
+                    searchBox.value.toLowerCase();
+
+
+                products.forEach(function(product) {
+
+                    const productText =
+                        product.innerText.toLowerCase();
+
+
+                    if (
+                        productText.includes(searchText)
+                    ) {
+
+                        product.style.display = "";
+
+                    } else {
+
+                        product.style.display = "none";
+
+                    }
+
+                });
+
+            }
+        );
+
+
+
+        // SHOP NOW
+
+        const shopButton =
+            document.querySelector(".shop-btn");
+
+
+        shopButton.addEventListener(
+            "click",
+            function() {
+
+                document
+                    .querySelector(".section-title")
+                    .scrollIntoView({
+                        behavior: "smooth"
+                    });
+
+            }
+        );
+
+
+    </script>
+
+
+</body>
+
+</html>
